@@ -1,39 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import TextField from './textField'
-import { validator } from '../utils/validator'
+import TextField from '../textField'
+import { validator } from '../../utils/validator'
 
-import Modal from './modal'
-
-const CardControl = ({ data, onSubmit }) => {
-  const [value, setValue] = useState(
-    data
-      ? data
-      : {
-          name: '',
-          lastName: '',
-          birthDate: '',
-          portfolio: '',
-        }
-  )
+const CardEditForm = ({ data, onSubmit, goBack }) => {
+  const [value, setValue] = useState({
+    name: data.name,
+    lastName: data.lastName,
+    birthDate: data.birthDate,
+    portfolio: data.portfolio,
+  })
 
   const [errors, setErrors] = useState({})
 
-  const [showModal, setShowModal] = useState(false)
-
-  const openModal = () => {
-    setShowModal(true)
-  }
-
-  const closeModal = () => {
-    setShowModal(false)
-    goBack()
-  }
-
-  const history = useHistory()
-
-  const goBack = () => {
-    history.push('/')
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!isValid) return
+    onSubmit(value)
   }
 
   const handleChange = ({ target }) => {
@@ -75,19 +57,11 @@ const CardControl = ({ data, onSubmit }) => {
 
   return (
     <>
-      <Modal isShown={showModal} onClick={closeModal} />
-
       <div className='container mt-5'>
         <div className='row'>
           <div className='col-md-8 offset-md-2 shadow p-4'>
-            <h1 className='mb-4'>{data ? 'Редактировать' : 'Создать'}</h1>
-            <form
-              onSubmit={(e) => {
-                onSubmit(e, value, isValid)
-                openModal()
-              }}
-              className='m-2 needs-validation'
-            >
+            <h1 className='mb-4'>Редактировать</h1>
+            <form onSubmit={handleSubmit} className='m-2 needs-validation'>
               <TextField
                 label='Имя'
                 name='name'
@@ -120,24 +94,18 @@ const CardControl = ({ data, onSubmit }) => {
                 onChange={handleChange}
                 error={errors.portfolio}
               />
-              {data ? (
-                <>
-                  <button
-                    className='btn btn-secondary me-2'
-                    type='button'
-                    onClick={goBack}
-                  >
-                    Назад
-                  </button>
-                  <button className='btn btn-primary' disabled={!isValid}>
-                    Обновить
-                  </button>
-                </>
-              ) : (
-                <button className='btn btn-primary' disabled={!isValid}>
-                  Создать
+              <>
+                <button
+                  className='btn btn-secondary me-2'
+                  type='button'
+                  onClick={goBack}
+                >
+                  Назад
                 </button>
-              )}
+                <button className='btn btn-primary' disabled={!isValid}>
+                  Обновить
+                </button>
+              </>
             </form>
           </div>
         </div>
@@ -146,4 +114,4 @@ const CardControl = ({ data, onSubmit }) => {
   )
 }
 
-export default CardControl
+export default CardEditForm

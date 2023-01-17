@@ -4,6 +4,23 @@ import { Link } from 'react-router-dom'
 const CURRENT_YEAR = 2023
 
 const Card = ({ data }) => {
+  const getAgeText = () => {
+    const age = CURRENT_YEAR - +data.birthDate
+
+    const lastDigits = age % 100 > 20 ? age % 10 : age % 100
+
+    let text = ''
+    if (lastDigits === 1) {
+      text = 'год'
+    } else if ([2, 3, 4].includes(lastDigits)) {
+      text = 'года'
+    } else {
+      text = 'лет'
+    }
+
+    return age + ' ' + text
+  }
+
   return (
     <div className='card m-4' style={{ width: 18 + 'rem' }}>
       <div className='card-header'>Карточка студента</div>
@@ -21,27 +38,21 @@ const Card = ({ data }) => {
             <div>
               <strong>Год рождения: </strong>
               <span>
-                {data.birthDate} ({CURRENT_YEAR - data.birthDate} года)
+                {data.birthDate} ({getAgeText()})
               </span>
             </div>
             <div>
               <strong>Портфолио: </strong>
               <a href={data.portfolio}>{data.portfolio}</a>
             </div>
-            {/* <button className='btn btn-primary mt-3' onClick={handleEdit}>
-              Редактрировать
-            </button> */}
-            <Link className='btn btn-primary mt-3' to='/control'>
-              Редактрировать
+            <Link className='btn btn-primary mt-3' to='/card/control'>
+              Редактировать
             </Link>
           </>
         ) : (
           <>
             <p>Нет данных</p>
-            {/* <button className='btn btn-primary' onClick={handleCreate}>
-              Добавить
-              </button> */}
-            <Link className='btn btn-primary' to='/control'>
+            <Link className='btn btn-primary' to='/card/control'>
               Добавить
             </Link>
           </>

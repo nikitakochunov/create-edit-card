@@ -15,7 +15,7 @@ const Modal = ({ isShown, onClick }) => {
           <div className='modal-body'>Обновлено</div>
           <div className='modal-footer'>
             <button
-              type='button'
+              type='submit'
               className='btn btn-secondary'
               onClick={onClick}
             >
